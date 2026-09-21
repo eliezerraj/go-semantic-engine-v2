@@ -1,0 +1,15 @@
+get product by SKU
+retrieve product using SKU
+find product by SKU
+lookup product details for a SKU
+show product information for SKU
+get inventory information for a product SKU
+retrieve product stock for a SKU
+check product details using SKU
+find product by product code
+update product by SKU
+change product information
+updatedate product by SKU´
+modify product stock
+update product by SKU
+set product price
