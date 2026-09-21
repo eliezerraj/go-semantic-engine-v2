@@ -1,0 +1,6 @@
+show the information of the product sku-200
+which is the stock level of product sku-432 ?
+how many itens sold the product sku-532 has
+change the price of product sku-200
+update the itens available of product sku-13
+delete product sku-300
