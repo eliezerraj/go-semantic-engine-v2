@@ -4,3 +4,5 @@ how many itens sold the product sku-532 has
 change the price of product sku-200
 update the itens available of product sku-13
 delete product sku-300
+
+tell me your health status

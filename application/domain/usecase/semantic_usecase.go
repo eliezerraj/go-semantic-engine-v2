@@ -2,19 +2,21 @@ package usecase
 
 import (
 	"context"
-		
+
 	"go.uber.org/zap"
 	"github.com/eliezerraj/go-core/v3/logger"
 
 	"github.com/go-semantic-engine-v2/application/tracing"
     "github.com/go-semantic-engine-v2/application/domain/entity"
     "github.com/go-semantic-engine-v2/application/infrastructure/repository"
+	"github.com/go-semantic-engine-v2/application/infrastructure/module"
 
 	"go.opentelemetry.io/otel/trace"
 )
 
 type SemanticUseCase struct {
     semanticRepository 	repository.ISemanticRepository
+	ModelModule 		module.ModelModule
 }
 
 type ISemanticUseCase interface {
@@ -22,11 +24,12 @@ type ISemanticUseCase interface {
 	IntentDecompose(ctx context.Context, intent entity.IntentDecompose) (*entity.IntentDecompose, error)
 }
 
-func NewSemanticUseCase(semanticRepository repository.ISemanticRepository) ISemanticUseCase {
+func NewSemanticUseCase(semanticRepository repository.ISemanticRepository, modelModule module.ModelModule) ISemanticUseCase {
 	logger.InfoOutCtx("initializing semantic usecase SUCCESSFULLY")
 	
 	return &SemanticUseCase{
 		semanticRepository: 	semanticRepository,
+		ModelModule: modelModule,
 	}
 }
 
@@ -38,6 +41,15 @@ func (uc *SemanticUseCase) SearchVector(ctx context.Context, vector entity.Vecto
 	ctx, span := tracing.CustomStartSpanCtx(ctx, "semanticUsecase.SearchVector", trace.SpanKindInternal)
 	defer span.End()
 
+	logger.Debug(ctx, "semantic usecase SearchVector request", zap.Any("vector", vector))
+	res, err := uc.ModelModule.ModelEmbeddingPost(ctx, vector)
+	if err != nil {
+		logger.Error(ctx, "error getting model embedding", zap.Any("error", err))
+		return nil, err
+	}
+	logger.Debug(ctx, "semantic usecase SearchVector model embedding result", zap.Any("res", res))
+
+	vector.Embedding = res.Embedding
 	result, err := uc.semanticRepository.SearchVector(ctx, vector)
 	if err != nil {
 		logger.Error(ctx, "error searching vector", zap.Any("error", err))

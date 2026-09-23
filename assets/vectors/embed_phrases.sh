@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-input_file="${1:-phrases2.txt}"
-output_file="${2:-phrases2_vector.txt}"
+input_file="${1:-order_phrases.txt}"
+output_file="${2:-order_phrases_vector.txt}"
 endpoint="http://127.0.0.1:6500/embed"
 
 if [[ ! -f "$input_file" ]]; then

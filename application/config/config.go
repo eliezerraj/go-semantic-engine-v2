@@ -47,6 +47,7 @@ type Authorization struct {
 	DryRun  			bool   `env:"AUTHORIZATION_DRY_RUN,required"`
 	JwksURL 			string `env:"AUTHORIZATION_JWKS_URL"`
 	RequiredAuthHeader  bool   `env:"AUTHORIZATION_REQUIRED_HEADER"`
+	Timeout             time.Duration `env:"AUTHENTICATION_TIMEOUT" envDefault:"15s"`
 }
 
 type App struct {
@@ -62,13 +63,21 @@ type Log struct {
 	Mode  logger.EncoderType `env:"LOG_MODE" envDefault:"json"`
 }
 
+type VectorEndpoint struct {
+	Endpoint string        `env:"VECTOR_ENDPOINT"`
+	UrlPath  string        `env:"VECTOR_URL_PATH"`
+	Timeout  time.Duration `env:"VECTOR_ENDPOINT_TIMEOUT"`
+}
+
 type Config struct {
 	App         App
 	HTTP        HTTP
 	Database    Database
+	Authorization Authorization
 	Log         Log
 	OtelEnv		OtelEnv
 	TokenConfig TokenConfig
+	Vector      VectorEndpoint
 }
 
 type TokenConfig struct {
