@@ -33,11 +33,11 @@ type Database struct {
 	Name                  string        `env:"DB_NAME,required,notEmpty"`
 	Schema                string        `env:"DB_SCHEMA" envDefault:"postgres"`
 	QueryTracer           bool          `env:"DATABASE_QUERY_TRACER" envDefault:"false"`
-	MaxConnections        int32         `env:"DB_MAX_CONNS" envDefault:"20"`
-	MinConnections        int32         `env:"DB_MIN_CONNS" envDefault:"4"`
+	MaxConnections        int32         `env:"DB_MAX_CONNS" envDefault:"5"`
+	MinConnections        int32         `env:"DB_MIN_CONNS" envDefault:"5"`
 	ConnTimeout           time.Duration `env:"DB_CONNECTION_TIMEOUT_DURATION" envDefault:"5s"`
-	ConnLifetime          time.Duration `env:"DB_LIFE_TIME_CONNS" envDefault:"24h"`
-	ConnIdleTime          time.Duration `env:"DB_IDLE_TIME_CONNS" envDefault:"60m"`
+	ConnLifetime          time.Duration `env:"DB_LIFE_TIME_CONNS" envDefault:"28s"`
+	ConnIdleTime          time.Duration `env:"DB_IDLE_TIME_CONNS" envDefault:"28s"`
 	MaxConnLifetimeJitter time.Duration `env:"DB_MAX_LIFE_TIME_JITTER_CONNS" envDefault:"2m"`
 	HealthCheckTimeout    time.Duration `env:"DB_HEALTH_CHECK_TIMEOUT" envDefault:"15s"`
 }
@@ -47,7 +47,7 @@ type Authorization struct {
 	DryRun  			bool   `env:"AUTHORIZATION_DRY_RUN,required"`
 	JwksURL 			string `env:"AUTHORIZATION_JWKS_URL"`
 	RequiredAuthHeader  bool   `env:"AUTHORIZATION_REQUIRED_HEADER"`
-	Timeout             time.Duration `env:"AUTHENTICATION_TIMEOUT" envDefault:"15s"`
+	Timeout             time.Duration `env:"AUTHORIZATION_TIMEOUT" envDefault:"15s"`
 }
 
 type App struct {
