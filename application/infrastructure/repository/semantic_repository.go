@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"context"
 	"time"
 
@@ -64,31 +65,37 @@ func (r *SemanticRepository) SearchVector(ctx context.Context, vector entity.Vec
 
 	connectorReader := r.dbConnector.Reader()
 
-	query := `select  ce.id,
-					  ce."text",
-					  cer.id,
+	// Convert vector to string for SQL query
+	strVector := "["
+	for i, v := range vector.Embedding {
+		strVector += fmt.Sprintf("%f", v)
+		if i < len(vector.Embedding)-1 {
+			strVector += ","
+		}
+	}
+	strVector += "]"
+
+	query := `select  ce."text",
 					  cer."type",
 					  c.name,
 					  ced.endpoint,
-					  ced.uri,
-					  e.id,
-					  e.vector 
+					  ced.uri
 				from embedding e,
 					capability_example_relation cer,
 					capability c,
 					capability_endpoint ced,
 					capability_example ce
-				where (e.vector <=> ?1 < 0.8
+				where (e.vector <=> $1) < 0.8
 				and e.fk_cap_exp_id = ce.id
 				and cer.fk_cap_exp = ce.id
 				and c.id = cer.fk_cap_id 
 				and c.fk_svc_id = cer.fk_cap_svc_id 
 				and ced.fk_cap_id = c.id 
 				and ced.fk_cap_svc_id = c.fk_svc_id
-				order by (e.vector <=> ?1) asc
+				order by (e.vector <=> $1) asc
 				limit 10`
 
-    rows, err := connectorReader.Query(ctx, query, vector.Text)
+    rows, err := connectorReader.Query(ctx, query, strVector)
     if err != nil {
         return nil, err
     }
@@ -98,6 +105,7 @@ func (r *SemanticRepository) SearchVector(ctx context.Context, vector entity.Vec
 	for rows.Next() {
 		capability := entity.Capability{}
 		err := rows.Scan(
+			&capability.Text,
 			&capability.Name,
 			&capability.Type,
 			&capability.Endpoint,

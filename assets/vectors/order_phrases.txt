@@ -1,0 +1,25 @@
+get order information by ORDER_NUMBER
+retrieve order information using ORDER_NUMBER
+find order by ORDER_NUMBER
+lookup order details for a given ORDER_NUMBER
+show order information for ORDER_NUMBER
+show me your status
+give me your health and status information
+which is the mcp server status
+give me the health status of order service
+get the general order service information
+shown me order service endpoint health
+checkout order ORDER_NUMBER
+perform checkout for order ORDER_NUMBER
+initiate checkout process for order
+complete checkout for order ORDER_NUMBER
+put an order with these informations
+perform an order with the given informations
+input a new order such as
+follow the order information for creation
+create an order according with data below
+get the order history of the product SKU-200
+show me all order from SKU-100
+retrieve the product history with 14 days below
+give all order from product with SKU-400
+get the product data history from now with 14 days

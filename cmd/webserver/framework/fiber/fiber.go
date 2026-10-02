@@ -1,6 +1,10 @@
 package fiber
 
 import (
+	"context"
+	
+	"go.uber.org/zap"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/json-iterator/go"
 
@@ -12,6 +16,7 @@ import (
 	"github.com/go-semantic-engine-v2/cmd/webserver/framework/fiber/middleware"
 
 	"github.com/eliezerraj/go-core/v3/logger"
+	"github.com/eliezerraj/go-core/v3/auth"
 )
 
 // Create a new Server configuration.
@@ -95,6 +100,19 @@ func (s *FiberServer) SetupRoutes(application *application.Application) {
 
 	root := s.FiberApp.Group("/")
 
+	// Create the AuthService instance and retrieve the JWKS URL
+	authService := auth.NewAuthService(
+		s.cfg.Authorization.JwksURL, 
+		s.cfg.Authorization.DryRun, 
+		s.cfg.Authorization.HeaderKey, 
+		s.cfg.Authorization.Timeout)
+
+	// Retrieve the JWKS URL from the auth service
+	err := authService.GetJwksUrl(context.Background())
+	if err != nil {
+		logger.WarnOutCtx("Failed to get JWKS URL", zap.Error(err))
+	}
+
 	// Create adapters for controllers						
 	adapters := newAdapters(s.cfg, application)
 	root.Get("/health", adapters.metadataAdp.HealthGet)
@@ -106,5 +124,7 @@ func (s *FiberServer) SetupRoutes(application *application.Application) {
 	appRoutes.Get("/echo-context", adapters.metadataAdp.ContextGet)
 
 	appRoutes.Post("/search/vector", middleware.MetricsMiddleware(adapters.applicationAdp.SearchVector))
-	appRoutes.Post("/intent/decompose", middleware.MetricsMiddleware(adapters.applicationAdp.IntentDecompose))
+	appRoutes.Post("/intent/decompose", 
+					authService.FiberAuthorizationMiddleware(),
+					middleware.MetricsMiddleware(adapters.applicationAdp.IntentDecompose))
 }

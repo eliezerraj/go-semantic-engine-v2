@@ -1,0 +1,27 @@
+get product by SKU
+retrieve product using SKU
+find product by SKU
+lookup product details for a SKU
+show product information for SKU
+get inventory information for a product SKU
+retrieve product stock for a SKU
+check product details using SKU
+find product by product code
+update product by SKU
+change product information
+update product by SKU
+modify product stock
+update product by SKU
+set product price
+show me your status
+give me your health and status information
+which is the mcp server status
+give me the health status of product service
+get the general inventory service information
+shown me product service endpoint health
+create a product with the given data
+insert a product with the data
+create a new product with the following data
+increase the product price of SKU 
+decrease the price of product SKU
+set a new price of product SKU

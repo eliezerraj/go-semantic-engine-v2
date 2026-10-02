@@ -8,11 +8,13 @@ import (
 
 	"github.com/eliezerraj/go-core/v3/logger"
 	"github.com/eliezerraj/go-core/v3/database/connector"
+	"github.com/eliezerraj/go-core/v3/httpclient"
 
 	"github.com/go-semantic-engine-v2/application/infrastructure/repository"
 	"github.com/go-semantic-engine-v2/application/config"
 	"github.com/go-semantic-engine-v2/application/controller"
 	"github.com/go-semantic-engine-v2/application/domain/usecase"
+	"github.com/go-semantic-engine-v2/application/infrastructure/module"
 )
 
 type Application struct {
@@ -73,11 +75,25 @@ func NewApplication(cfg *config.Config) (*Application, error) {
 		return nil, err
 	}
 	
-	// Authorizer Repository initialization (where the RSA keys are loaded and managed)
+	// Repository initialization (where the RSA keys are loaded and managed)
 	semanticRepository := repository.NewSemanticRepository(dbConnector)
 
-	// UseCase initialization
-	semanticUsecase := usecase.NewSemanticUseCase(semanticRepository) 
+	// Create the forwards modules.
+	httpConfig := &httpclient.HttpConfig{
+		Timeout:             cfg.HTTP.Timeout * time.Second,
+		KeepAlive:           cfg.HTTP.KeepAlive * time.Second,
+		IdleConnTimeout:     cfg.HTTP.IdleConnTimeout * time.Second,
+		MaxIdleConns:        cfg.HTTP.MaxIdleConns,
+		MaxIdleConnsPerHost: cfg.HTTP.MaxIdleConnsPerHost,
+		MaxConnsPerHost:     cfg.HTTP.MaxConnsPerHost,
+		ServiceName:         cfg.App.Name,
+	}
+
+	modelHttpClient := httpclient.NewHttpClient(httpConfig)
+	modelModule := module.NewModelModule(cfg, modelHttpClient, nil)
+
+	// UseCase initialization	
+	semanticUsecase := usecase.NewSemanticUseCase(semanticRepository, modelModule)
 
 	// Controller initialization
 	semanticController := controller.NewSemanticController(semanticUsecase)
