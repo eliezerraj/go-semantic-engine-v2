@@ -48,7 +48,7 @@ func (p *SemanticController) SearchVector(ctx context.Context, req external.Vect
 		Text: req.Text,
 	})
 	if err != nil {
-		logger.Error(ctx, "error executing SearchVector controller", zap.Error(err))
+		logger.Debug(ctx, "error executing SearchVector controller", zap.Error(err))
 		return nil, err
 	}
 
@@ -66,7 +66,7 @@ func (p *SemanticController) IntentDecompose(ctx context.Context, req external.I
 		Intent: req.Intent,
 	})
 	if err != nil {
-		logger.Error(ctx, "error executing IntentDecompose controller", zap.Error(err))
+		logger.Debug(ctx, "error executing IntentDecompose controller", zap.Error(err))
 		return nil, err
 	}
 

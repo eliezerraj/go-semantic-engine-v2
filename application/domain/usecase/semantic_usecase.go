@@ -44,7 +44,7 @@ func (uc *SemanticUseCase) SearchVector(ctx context.Context, vector entity.Vecto
 	logger.Debug(ctx, "semantic usecase SearchVector request", zap.Any("vector", vector))
 	res, err := uc.ModelModule.ModelEmbeddingPost(ctx, vector)
 	if err != nil {
-		logger.Error(ctx, "error getting model embedding", zap.Any("error", err))
+		logger.Debug(ctx, "error getting model embedding", zap.Any("error", err))
 		return nil, err
 	}
 	logger.Debug(ctx, "semantic usecase SearchVector model embedding result", zap.Any("res", res))
@@ -52,7 +52,7 @@ func (uc *SemanticUseCase) SearchVector(ctx context.Context, vector entity.Vecto
 	vector.Embedding = res.Embedding
 	result, err := uc.semanticRepository.SearchVector(ctx, vector)
 	if err != nil {
-		logger.Error(ctx, "error searching vector", zap.Any("error", err))
+		logger.Debug(ctx, "error searching vector", zap.Any("error", err))
 		return nil, err
 	}
 

@@ -56,7 +56,7 @@ func (r *SemanticRepository) SearchVector(ctx context.Context, vector entity.Vec
 		if err != nil {
 			span.RecordError(err) 
 			span.SetStatus(codes.Error, err.Error())
-			logger.Error(ctx, "semantic repository VectorSearch failed", zap.Error(err))
+			logger.Debug(ctx, "semantic repository VectorSearch failed", zap.Error(err))
 		}
         histogram.Record(ctx, time.Since(start).Seconds(), metric.WithAttributes(
             attribute.String("operation", "VectorSearch"),
