@@ -1,7 +1,7 @@
 # docker build -t go-semantic-engine-v2 .
 # docker run -dit --name go-semantic-engine-v2 -p 7004:7004 go-semantic-engine-v2
 
-FROM golang:1.25 AS builder
+FROM golang:1.26 AS builder
 
 RUN apt-get update && apt-get install bash && apt-get install -y --no-install-recommends ca-certificates
 
